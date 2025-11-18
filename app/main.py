@@ -7,6 +7,7 @@ from app.db import init_db, get_session, create_db_and_tables, engine
 from app.crud import query_games
 from app.models import Games
 from app.schemas import GameRead
+import json
 
 app = FastAPI(title="Games API catalog")
 
@@ -14,7 +15,7 @@ create_db_and_tables()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origins=["http://localhost:4200", "http://127.0.0.1:4200"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,13 +40,20 @@ def api_juegos(
 @app.get("/api/games/{game_id}", response_model=GameRead)
 def get_game(game_id: int, session: Session = Depends(get_session)):
     game = session.get(Games, game_id)
+    
     if not game:
         raise HTTPException(status_code=404, detail="Game not found")
-    return game
+    game_data = game.dict() 
+    if game_data.get('tags') and isinstance(game_data['tags'], str):
+        try:
+            game_data['tags'] = json.loads(game_data['tags'])
+        except json.JSONDecodeError:
+            game_data['tags'] = []
+    return game_data
 
 @app.get("/api/top5", response_model=List[GameRead])
 def get_top5_games(session: Session = Depends(get_session)):
-    statement = select(Games).where(Games.rank != None).order_by(Games.rank.asc()).limit(5)
+    statement = select(Games).where(Games.rank != None).order_by(Games.rank.asc()).limit(10)
     games = session.exec(statement).all()
 
     games_list = []
@@ -65,7 +73,7 @@ def get_top5_games(session: Session = Depends(get_session)):
 
 @app.get("/api/latest5", response_model=List[GameRead])
 def get_latest5_games(session: Session = Depends(get_session)):
-    statement = select(Games).where(Games.release_date != None).order_by(Games.release_date.desc()).limit(5)
+    statement = select(Games).where(Games.release_date != None).order_by(Games.release_date.desc()).limit(10)
     games = session.exec(statement).all()
 
     games_list = []
@@ -81,6 +89,54 @@ def get_latest5_games(session: Session = Depends(get_session)):
             game_data['year'] = None
         games_list.append(game_data)
 
+    return games_list
+
+@app.get("/api/games/{game_id}/related", response_model=List[GameRead])
+def get_related_games(game_id: int, session: Session = Depends(get_session)):
+    main_game = session.get(Games, game_id)
+    if not main_game:
+        return []
+
+    try:
+        if main_game.tags and isinstance(main_game.tags, str):
+            target_tags = json.loads(main_game.tags)
+        else:
+            target_tags = []
+    except json.JSONDecodeError:
+        target_tags = []
+
+    if not target_tags:
+        return []
+
+    tag_conditions = [Games.tags.like(f'%"{tag}"%') for tag in target_tags]
+
+    if not tag_conditions:
+        return []
+
+    or_clause = tag_conditions[0]
+    
+    for condition in tag_conditions[1:]:
+        or_clause |= condition
+
+    statement = (
+        select(Games)
+        .where(or_clause)
+        .where(Games.id != game_id)
+        .limit(3)
+    )
+    
+    related_games = session.exec(statement).all()
+
+    games_list = []
+    for game in related_games:
+        game_data = game.dict()
+        if game.tags and isinstance(game.tags, str):
+            try:
+                game_data['tags'] = json.loads(game.tags)
+            except json.JSONDecodeError:
+                game_data['tags'] = []
+        games_list.append(game_data)
+        
     return games_list
 
 
