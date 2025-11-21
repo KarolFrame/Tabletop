@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environments';
 
 export interface Game {
   id: number;
@@ -22,7 +23,7 @@ export interface Game {
   providedIn: 'root',
 })
 export class GamesServiceTop5 {
-  private apiUrl = 'http://127.0.0.1:8000/api/top5';
+  private apiUrl = `${environment.apiURL}/api/top5`;
 
   constructor(private http: HttpClient) {}
 
@@ -35,7 +36,7 @@ export class GamesServiceTop5 {
   providedIn: 'root',
 })
 export class GamesServiceLatest5 {
-  private apiUrl = 'http://127.0.0.1:8000/api/latest5';
+  private apiUrl = `${environment.apiURL}/api/latest5`;
 
   constructor(private http: HttpClient) {}
 
@@ -48,7 +49,7 @@ export class GamesServiceLatest5 {
   providedIn: 'root',
 })
 export class GameService {
-  private apiUrl = 'http://127.0.0.1:8000/api/games';
+  private apiUrl = `${environment.apiURL}/api/games`;
 
   constructor(private http: HttpClient) {}
   getGameDetails(id: number): Observable<Game> {
