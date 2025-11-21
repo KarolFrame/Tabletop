@@ -16,7 +16,6 @@ def get_session():
 from sqlmodel import SQLModel, create_engine, Session
 from app.models import Games
 
-DATABASE_URL = "sqlite:///./app.db"
 engine = create_engine(DATABASE_URL, echo=True)
 
 def create_db_and_tables():
