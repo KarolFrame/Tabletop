@@ -38,7 +38,7 @@ If you cannot find a suitable recommendation, ask for more details.
             "Content-Type": "application/json"
         },
         json={
-            "model": "nousresearch/hermes-3-llama-3.1-405b:free",
+            "model": "qwen/qwen3-coder:free",
             "messages": [
                 {"role": "user", "content": prompt}
             ]
