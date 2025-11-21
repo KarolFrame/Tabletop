@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, Query, HTTPException
 from typing import List, Optional
 from sqlmodel import Session, select
 from fastapi.middleware.cors import CORSMiddleware
+from app.routers import chat
 
 from app.db import init_db, get_session, create_db_and_tables, engine
 from app.crud import query_games
@@ -11,6 +12,7 @@ import json
 
 app = FastAPI(title="Games API catalog")
 
+app.include_router(chat.router)
 create_db_and_tables()
 
 app.add_middleware(

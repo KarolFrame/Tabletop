@@ -1,0 +1,41 @@
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.bubble {
+  max-width: 75%;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+}
+
+.user {
+  align-self: flex-end;
+  background: #ff7b00;
+  color: white;
+}
+
+.bot {
+  align-self: flex-start;
+  background: #333;
+  color: white;
+}
+
+.input-area {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 8px;
+}

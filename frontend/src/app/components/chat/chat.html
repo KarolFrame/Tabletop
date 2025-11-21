@@ -1,0 +1,17 @@
+<div class="chat-box">
+  <div class="messages">
+    <div
+      *ngFor="let msg of messages"
+      [class.user]="msg.from === 'user'"
+      [class.bot]="msg.from === 'bot'"
+      class="bubble"
+    >
+      {{ msg.text }}
+    </div>
+  </div>
+
+  <div class="input-area">
+    <input [(ngModel)]="input" placeholder="Write yout message..." />
+    <button (click)="send()">Submit</button>
+  </div>
+</div>
