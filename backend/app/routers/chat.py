@@ -7,7 +7,7 @@ import os
 router = APIRouter()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("models/gemini-1.5-flash-latest")
 
 @router.post("/chat")
 def chat_ai(data: dict):
@@ -22,16 +22,15 @@ def chat_ai(data: dict):
     ])
 
     prompt = f"""
-    You are a helpful assistant specialized in videogames.
-    You must ONLY recommend games from the following list:
+    You are a helpful assistant specialized in video games.
+    You can ONLY recommend games from this list:
     {games_text}
 
     The user says:
     "{message}"
 
-    Respond in a natural, friendly, and clear way.
-    If no game fits the user's request, ask for more details.
-    Do NOT create or recommend games that are not in the list.
+    Respond naturally and clearly.
+    If you cannot find a suitable game, ask for more details.
     """
 
     response = model.generate_content(prompt)
