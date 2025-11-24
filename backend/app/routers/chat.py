@@ -38,7 +38,7 @@ If you cannot find a suitable recommendation, ask for more details.
             "Content-Type": "application/json"
         },
         json={
-            "model": "google/gemma-7b-it:free",
+            "model": "mistralai/Mistral-7B-Instruct-v0.2",
             "messages": [
                 {"role": "user", "content": prompt}
             ]
