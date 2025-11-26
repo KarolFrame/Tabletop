@@ -6,10 +6,16 @@ import { GameDetailComponentDetails } from '../game-detail-component-details/gam
 import { ListGames } from '../list-games/list-games';
 import { Observable, forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { GameDetailComponentReview } from '../game-detail-component-review/game-detail-component-review';
 
 @Component({
   selector: 'app-game-detail-component',
-  imports: [GameDetailComponentBanner, GameDetailComponentDetails, ListGames],
+  imports: [
+    GameDetailComponentBanner,
+    GameDetailComponentDetails,
+    ListGames,
+    GameDetailComponentReview,
+  ],
   templateUrl: './game-detail-component.html',
   styleUrl: './game-detail-component.css',
 })

@@ -28,6 +28,7 @@ ONLY recommend games from this list:
 The user says:
 "{message}"
 ⚠️ IMPORTANT RULES:
+- Detect the user's language and answer in that same language.
 - Respond in 80 words or less.
 - Recommend ONLY 3 games maximum.
 - Choose the BEST matches, not the whole list.
