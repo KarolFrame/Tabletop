@@ -10,6 +10,7 @@ export class GameServiceSearch {
   private baseUrl = `${environment.apiURL}/games`;
 
   constructor(private http: HttpClient) {}
+
   searchGames(filters: {
     title?: string;
     genre?: string;
@@ -17,10 +18,6 @@ export class GameServiceSearch {
     tags?: string[];
   }): Observable<any[]> {
     let params = new HttpParams();
-
-    if (filters.title) {
-      params = params.set('title', filters.title);
-    }
     if (filters.genre) {
       params = params.set('genre', filters.genre);
     }
@@ -33,6 +30,7 @@ export class GameServiceSearch {
 
     return this.http.get<any[]>(this.baseUrl, { params });
   }
+
   getGenres() {
     return this.http.get<string[]>(environment.apiURL + '/api/genres');
   }

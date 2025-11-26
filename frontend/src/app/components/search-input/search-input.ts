@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { GameStateService } from '../../services/game-state.service';
-
+import Fuse from 'fuse.js';
 @Component({
   selector: 'app-search-input',
   imports: [FormsModule, CommonModule],
@@ -65,11 +65,27 @@ export class SearchInput implements OnInit {
       .filter((t) => t.length > 0);
 
     this.gameService.searchGames(this.filters).subscribe((res) => {
-      this.gameState.setResults(res);
+      const fuse = new Fuse(res, {
+        keys: ['name'],
+        threshold: 0.45,
+        ignoreLocation: true,
+        minMatchCharLength: 2,
+      });
+
+      let finalResults = res;
+
+      if (this.filters.title.trim().length > 0) {
+        const fuzzy = fuse.search(this.filters.title.trim());
+        finalResults = fuzzy.map((f) => f.item);
+      }
+
+      this.gameState.setResults(finalResults);
+
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
         this.router.navigate(['/results']);
       });
     });
+
     this._scroolToTop();
     this._resetInputs();
     this.submitSearch.emit();
