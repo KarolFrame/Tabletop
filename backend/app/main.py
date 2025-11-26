@@ -10,6 +10,8 @@ from app.crud import query_games
 from app.models import Games
 from app.schemas import GameRead
 import json
+from datetime import datetime
+
 
 app = FastAPI(title="Games API catalog")
 
@@ -94,6 +96,33 @@ def get_latest5_games(session: Session = Depends(get_session)):
         games_list.append(game_data)
 
     return games_list
+
+@app.get("/api/trending", response_model=List[GameRead])
+def get_top5_games(session: Session = Depends(get_session)):
+    games = session.exec(
+        select(Games).where(Games.rank != None)
+    ).all()
+
+    def score(game: Games):
+        rank_score = 1 / game.rank if game.rank and game.rank > 0 else 0
+        if game.release_date:
+            try:
+                release_year = int(game.release_date.split("-")[0])
+                date_score = release_year / datetime.now().year
+            except:
+                date_score = 0
+        else:
+            date_score = 0
+        return (rank_score * 0.7) + (date_score * 0.3)
+    trending = sorted(games, key=lambda g: score(g), reverse=True)
+    trending = trending[:10]
+    result = []
+    for g in trending:
+        game_data = g.dict()
+        game_data["tags"] = g.tags_list()
+        result.append(game_data)
+
+    return result
 
 @app.get("/api/games/{game_id}/related", response_model=List[GameRead])
 def get_related_games(game_id: int, session: Session = Depends(get_session)):

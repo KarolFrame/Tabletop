@@ -48,6 +48,19 @@ export class GamesServiceLatest5 {
 @Injectable({
   providedIn: 'root',
 })
+export class GamesServiceTrending {
+  private apiUrl = `${environment.apiURL}/api/trending`;
+
+  constructor(private http: HttpClient) {}
+
+  listGames(): Observable<Game[]> {
+    return this.http.get<Game[]>(this.apiUrl);
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class GameService {
   private apiUrl = `${environment.apiURL}/api/games`;
 

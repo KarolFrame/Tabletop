@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ListGames } from '../list-games/list-games';
-import { GamesServiceTop5, GamesServiceLatest5 } from '../../services/games';
+import { GamesServiceTop5, GamesServiceLatest5, GamesServiceTrending } from '../../services/games';
 import { Game } from '../../services/games';
 import { CommonModule } from '@angular/common';
 import { forkJoin, Observable } from 'rxjs';
@@ -9,6 +9,7 @@ import { Loader } from '../loader/loader';
 interface HomeLists {
   top5List: Game[];
   top5Latest: Game[];
+  topTrending: Game[];
 }
 
 @Component({
@@ -21,22 +22,26 @@ export class Home implements OnInit {
   homeLists: HomeLists = {
     top5List: [],
     top5Latest: [],
+    topTrending: [],
   };
 
   isLoading: boolean = true;
 
   constructor(
     private gamesServiceTop5: GamesServiceTop5,
-    private gameServiceLatest5: GamesServiceLatest5
+    private gameServiceLatest5: GamesServiceLatest5,
+    private gameServiceTrending: GamesServiceTrending
   ) {}
 
   ngOnInit(): void {
     const top5$: Observable<Game[]> = this.gamesServiceTop5.listGames();
     const latest5$: Observable<Game[]> = this.gameServiceLatest5.listGames();
-    forkJoin([top5$, latest5$]).subscribe({
-      next: ([top5Data, latest5Data]) => {
+    const trending10$: Observable<Game[]> = this.gameServiceTrending.listGames();
+    forkJoin([top5$, latest5$, trending10$]).subscribe({
+      next: ([top5Data, latest5Data, trendingData]) => {
         this.homeLists.top5List = top5Data;
         this.homeLists.top5Latest = latest5Data;
+        this.homeLists.topTrending = trendingData;
       },
       error: (err) => {
         console.error('Error al cargar las listas de juegos:', err);
