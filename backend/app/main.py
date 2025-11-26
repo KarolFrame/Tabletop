@@ -57,6 +57,12 @@ def get_game(game_id: int, session: Session = Depends(get_session)):
             game_data['tags'] = []
     return game_data
 
+@app.get("/api/genres", response_model=List[str])
+def get_genres(session: Session = Depends(get_session)):
+    genres = session.exec(select(Games.genre)).all()
+    cleaned = sorted({g for g in genres if g and g.strip()})
+    return cleaned
+
 @app.get("/api/top10", response_model=List[GameRead])
 def get_top10_games(session: Session = Depends(get_session)):
     statement = (

@@ -33,4 +33,7 @@ export class GameServiceSearch {
 
     return this.http.get<any[]>(this.baseUrl, { params });
   }
+  getGenres() {
+    return this.http.get<string[]>(environment.apiURL + '/genres');
+  }
 }

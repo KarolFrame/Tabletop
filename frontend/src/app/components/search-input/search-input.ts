@@ -11,7 +11,7 @@ import { GameStateService } from '../../services/game-state.service';
   templateUrl: './search-input.html',
   styleUrl: './search-input.css',
 })
-export class SearchInput {
+export class SearchInput implements OnInit {
   filters = {
     title: '',
     genre: '',
@@ -22,16 +22,23 @@ export class SearchInput {
   tagsInput = '';
   games: any[] = [];
 
-  genres = ['Shooter', 'MMORPG', 'MOBA', 'RPG', 'Strategy', 'Card Game'];
+  genres: string[] = [];
   platforms = ['PC', 'Browser', 'WebGL'];
 
   constructor(
     private gameService: GameServiceSearch,
     private gameState: GameStateService,
-    private router: Router
+    private router: Router,
+    private filtersService: GameServiceSearch
   ) {}
 
   @Output() submitSearch = new EventEmitter<void>();
+
+  ngOnInit() {
+    this.filtersService.getGenres().subscribe((g) => {
+      this.genres = g;
+    });
+  }
 
   _scroolToTop = () => {
     window.scrollTo({
