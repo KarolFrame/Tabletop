@@ -63,19 +63,20 @@ export class SearchInput implements OnInit {
       .split(',')
       .map((t) => t.trim())
       .filter((t) => t.length > 0);
+    const titleQuery = this.filters.title.trim();
 
     this.gameService.searchGames(this.filters).subscribe((res) => {
       const fuse = new Fuse(res, {
         keys: ['name'],
-        threshold: 0.45,
+        threshold: 0.3,
         ignoreLocation: true,
         minMatchCharLength: 2,
       });
 
       let finalResults = res;
 
-      if (this.filters.title.trim().length > 0) {
-        const fuzzy = fuse.search(this.filters.title.trim());
+      if (titleQuery.length > 0) {
+        const fuzzy = fuse.search(titleQuery);
         finalResults = fuzzy.map((f) => f.item);
       }
 
@@ -84,10 +85,10 @@ export class SearchInput implements OnInit {
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
         this.router.navigate(['/results']);
       });
-    });
 
-    this._scroolToTop();
-    this._resetInputs();
-    this.submitSearch.emit();
+      this._scroolToTop();
+      this._resetInputs();
+      this.submitSearch.emit();
+    });
   }
 }
