@@ -22,8 +22,8 @@ export interface Game {
 @Injectable({
   providedIn: 'root',
 })
-export class GamesServiceTop5 {
-  private apiUrl = `${environment.apiURL}/api/top5`;
+export class GamesServiceTop10 {
+  private apiUrl = `${environment.apiURL}/api/top10`;
 
   constructor(private http: HttpClient) {}
 
@@ -35,8 +35,8 @@ export class GamesServiceTop5 {
 @Injectable({
   providedIn: 'root',
 })
-export class GamesServiceLatest5 {
-  private apiUrl = `${environment.apiURL}/api/latest5`;
+export class GamesServiceLatest10 {
+  private apiUrl = `${environment.apiURL}/api/latest10`;
 
   constructor(private http: HttpClient) {}
 

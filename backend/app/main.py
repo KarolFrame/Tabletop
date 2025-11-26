@@ -57,9 +57,14 @@ def get_game(game_id: int, session: Session = Depends(get_session)):
             game_data['tags'] = []
     return game_data
 
-@app.get("/api/top5", response_model=List[GameRead])
-def get_top5_games(session: Session = Depends(get_session)):
-    statement = select(Games).where(Games.rank != None).order_by(Games.rank.asc()).limit(10)
+@app.get("/api/top10", response_model=List[GameRead])
+def get_top10_games(session: Session = Depends(get_session)):
+    statement = (
+        select(Games)
+        .where(Games.rank != None)
+        .order_by(Games.rank.asc())
+        .limit(10)
+    )
     games = session.exec(statement).all()
 
     games_list = []
@@ -77,8 +82,8 @@ def get_top5_games(session: Session = Depends(get_session)):
 
     return games_list
 
-@app.get("/api/latest5", response_model=List[GameRead])
-def get_latest5_games(session: Session = Depends(get_session)):
+@app.get("/api/latest10", response_model=List[GameRead])
+def get_latest10_games(session: Session = Depends(get_session)):
     statement = select(Games).where(Games.release_date != None).order_by(Games.release_date.desc()).limit(10)
     games = session.exec(statement).all()
 
@@ -98,29 +103,32 @@ def get_latest5_games(session: Session = Depends(get_session)):
     return games_list
 
 @app.get("/api/trending", response_model=List[GameRead])
-def get_trending(session: Session = Depends(get_session)):
+def get_trending_games(session: Session = Depends(get_session)):
     games = session.exec(
-        select(Games).where(Games.rank != None)
+        select(Games).where(Games.release_date != None)
     ).all()
-    def score(game: Games):
-        rank_score = 1 / game.rank if game.rank and game.rank > 0 else 0
-        if game.release_date:
-            try:
-                release_dt = datetime.strptime(game.release_date, "%Y-%m-%d")
-                days_since_release = (datetime.now() - release_dt).days
-                recency_score = 1 / (1 + days_since_release)
-            except:
-                recency_score = 0
-        else:
-            recency_score = 0
-        return (rank_score * 0.6) + (recency_score * 0.4)
 
-    trending = sorted(games, key=score, reverse=True)[:10]
+    def recency_score(game: Games):
+        try:
+            release_dt = datetime.strptime(game.release_date, "%Y-%m-%d")
+            days = (datetime.now() - release_dt).days
+            return -days
+        except:
+            return -999999
+
+    trending = sorted(games, key=recency_score, reverse=True)[:10]
 
     result = []
     for g in trending:
         game_data = g.dict()
         game_data["tags"] = g.tags_list()
+        if g.release_date:
+            try:
+                game_data["year"] = int(g.release_date.split("-")[0])
+            except:
+                game_data["year"] = None
+        else:
+            game_data["year"] = None
         result.append(game_data)
 
     return result
