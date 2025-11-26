@@ -2,6 +2,6 @@
 
 <ng-container *ngIf="!isLoading">
   <app-list-games [listName]="'TRENDING NOW'" [gameList]="homeLists.topTrending" />
-  <app-list-games [listName]="'MOST PLAYED GAMES'" [gameList]="homeLists.top5List" />
-  <app-list-games [listName]="'NEW RELEASES'" [gameList]="homeLists.top5Latest" />
+  <app-list-games [listName]="'MOST PLAYED GAMES'" [gameList]="homeLists.top10List" />
+  <app-list-games [listName]="'NEW RELEASES'" [gameList]="homeLists.top10Latest" />
 </ng-container>
