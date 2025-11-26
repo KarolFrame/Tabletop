@@ -1,6 +1,8 @@
 <div class="m-6">
   <app-game-detail-component-banner [game]="game" />
   <app-game-detail-component-details [game]="game" />
-  <app-game-detail-component-review [game]="game" />
+  <div class="flex justify-center mt-5">
+    <app-game-detail-component-review [game]="game" />
+  </div>
   <app-list-games [listName]="'RELATED GAMES'" [gameList]="relatedGames" />
 </div>

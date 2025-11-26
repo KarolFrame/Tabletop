@@ -1,32 +1,17 @@
-<div class="m-5 p-2 flex flex-col">
-  <h1 class="text-3xl font-bold ml-6">{{ listName }}</h1>
-  <div class="relative">
-    <button
-      *ngIf="_showLeftButton && gameList.length > 5"
-      (click)="_scrollLeft()"
-      class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 h-10 w-8 rounded-md"
-    >
-      <app-app-icon [name]="'arrow_back_ios'" />
-    </button>
-
-    <div
-      #scrollContainer
-      class="flex m-3 gap-3 overflow-x-hidden overflow-y-hidden scroll-smooth"
-      (scroll)="_checkScrollPosition()"
-    >
-      <app-list-games-card
-        *ngFor="let game of gameList"
-        [game]="game"
-        class="flex shrink-0 w-64"
-      ></app-list-games-card>
-    </div>
-
-    <button
-      *ngIf="gameList.length > 5"
-      (click)="_scrollRight()"
-      class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 w-8 h-10 rounded-md"
-    >
-      <app-app-icon [name]="'arrow_forward_ios'" />
-    </button>
-  </div>
+<div class="my-6">
+  <h2 class="text-4xl font-bold">{{ listName }}</h2>
+  <p-carousel
+    [value]="gameList"
+    [circular]="true"
+    [numVisible]="4"
+    [numScroll]="1"
+    [responsiveOptions]="responsiveOptions"
+    indicatorsContentClass="zp-carousel-dots"
+    indicatorStyleClass="zp-carousel-dot"
+    class="mt-4"
+  >
+    <ng-template let-game pTemplate="item">
+      <app-list-games-card [game]="game" class="mx-auto w-full sm:w-64"></app-list-games-card>
+    </ng-template>
+  </p-carousel>
 </div>

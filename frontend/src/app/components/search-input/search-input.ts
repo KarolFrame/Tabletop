@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { GameServiceSearch } from '../../services/game.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -30,6 +30,8 @@ export class SearchInput {
     private gameState: GameStateService,
     private router: Router
   ) {}
+
+  @Output() submitSearch = new EventEmitter<void>();
 
   _scroolToTop = () => {
     window.scrollTo({
@@ -63,5 +65,6 @@ export class SearchInput {
     });
     this._scroolToTop();
     this._resetInputs();
+    this.submitSearch.emit();
   }
 }

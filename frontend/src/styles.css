@@ -6,3 +6,17 @@ body {
   font-family: 'Poppins', sans-serif;
   color: white;
 }
+
+.zp-carousel-dot {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 9999px !important;
+  background: #444 !important;
+  opacity: 0.4 !important;
+  border: none !important;
+}
+
+.p-carousel-indicator-active .zp-carousel-dot {
+  background: #00ffff !important;
+  opacity: 1 !important;
+}

@@ -1,9 +1,26 @@
 <div class="flex items-center justify-between p-3">
-  <div class="flex gap-2 ml-5">
+  <div class="flex gap-2 ml-5 items-center">
     <a [routerLink]="'/'">
-      <img class="h-11 w-auto ml-4" src="/assets/img/zerolPlay_logo.png" alt="Logo de ZeroPlay"
-    /></a>
+      <img class="h-11 w-auto ml-4" src="/assets/img/zerolPlay_logo.png" />
+    </a>
     <h1 class="text-4xl">ZEROPLAY</h1>
   </div>
-  <app-search-input class="mr-7" />
+
+  <app-search-input class="mr-7 hidden sm:flex" />
+
+  <button class="sm:hidden mr-5" (click)="openSearch = true">
+    <app-app-icon name="search" />
+  </button>
+</div>
+<div
+  *ngIf="openSearch"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50"
+  (click)="openSearch = false"
+>
+  <div class="bg-[#2D2E33] w-full p-5 rounded-b-2xl shadow-xl" (click)="$event.stopPropagation()">
+    <button class="mb-3" (click)="openSearch = false">
+      <app-app-icon name="close" />
+    </button>
+    <app-search-input (submitSearch)="closeSearchPanel()" />
+  </div>
 </div>

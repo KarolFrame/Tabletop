@@ -5,8 +5,6 @@
 .chat-box {
   display: flex;
   flex-direction: column;
-  height: 60vh;
-  width: 30vw;
 }
 
 .messages {
