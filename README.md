@@ -13,7 +13,13 @@ ZeroPlay is a modern platform for discovering and browsing **free-to-play games*
   - Most Played  
   - New Releases  
   - Trending (rank + recency score)  
-  - Related games by genre and tags  
+  - Related games by genre and tags
+
+- 🔎 **Smart Search (Fuzzy Matching with Fuse.js)**
+  - Fixes typos automatically
+  - Example: “oberwatch” → Overwatch
+  - Works on top of backend filters
+  - Fully client-side
 
 - 🤖 **Integrated AI (OpenRouter)**
   - Chat assistant using Mistral  
@@ -73,7 +79,8 @@ ZeroPlay is a modern platform for discovering and browsing **free-to-play games*
 - TailwindCSS  
 - PrimeNG  
 - Google Material Icons  
-- RxJS (Observables)  
+- RxJS (Observables)
+- Fuse.js (Fuzzy Search)  
 - Angular Router
 
 ### **Backend**
@@ -82,13 +89,36 @@ ZeroPlay is a modern platform for discovering and browsing **free-to-play games*
 - Python  
 - Requests  
 - OpenRouter API integration  
-- Render deployment  
+- Render deployment
+
+---
+
+## 🔎 Fuzzy Search (Fuse.js)
+
+ZeroPlay integrates Fuse.js to provide typo-tolerant search:
+- User enters → overwathc / oberwatch / ovrwach
+- Fuse.js ranks similarity
+- Correct result is displayed → “Overwatch”
+
+Search flow:  
+1. User submits filters
+2. Backend filters by:
+   - genre
+   - platform
+   - tags
+3. Frontend applies fuzzy search over the returned list
+4. Results are displayed in the /results view
+
+This makes search:
+- fast
+- typo-resistant
+- independent from backend performance
 
 ---
 
 ## 🎮 Free Games API Integration
 
-The backend periodically consumes a **public Free Games API** to populate the SQL database with:
+The backend periodically consumes a **freetogame** to populate the SQL database with:
 
 - name  
 - genre  
@@ -186,11 +216,12 @@ score = (rank_score * 0.6) + (recency_score * 0.4)
 
 ## 📄 License
 
-MIT License (you can adjust this)
+This project is licensed under the MIT License.  
+You are free to use, modify, and distribute this project as long as proper credit is given.
 
 ---
 
 ## ✨ Author
 
-Developed by **Carolina Pérez**  
+Developed by **Carolina Pérez** / **KarolFrame**
 ZeroPlay — Free Games Discovery Platform
